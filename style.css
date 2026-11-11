@@ -50,3 +50,12 @@ li button {
     background-color: #e74c3c;
     padding: 5px 10px;
 }
+
+li span {
+  cursor: pointer;
+}
+
+li.feita span {
+  text-decoration: line-through;
+  color: #999;
+}

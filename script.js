@@ -8,18 +8,28 @@ function salvar() {
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
-function mostrarTarefa(texto) {
+function mostrarTarefa(tarefa) {
   const item = document.createElement("li");
-  item.textContent = texto;
+
+  const texto = document.createElement("span");
+  texto.textContent = tarefa.texto;
+  if (tarefa.feita) item.classList.add("feita");
+
+  texto.addEventListener("click", () => {
+    tarefa.feita = !tarefa.feita;
+    item.classList.toggle("feita");
+    salvar();
+  });
 
   const botaoRemover = document.createElement("button");
   botaoRemover.textContent = "X";
   botaoRemover.addEventListener("click", () => {
     item.remove();
-    tarefas.splice(tarefas.indexOf(texto), 1);
+    tarefas.splice(tarefas.indexOf(tarefa), 1);
     salvar();
   });
 
+  item.appendChild(texto);
   item.appendChild(botaoRemover);
   lista.appendChild(item);
 }
@@ -28,11 +38,16 @@ function adicionarTarefa() {
   const texto = campo.value.trim();
   if (texto === "") return;
 
-  tarefas.push(texto);
+  const tarefa = { texto: texto, feita: false };
+  tarefas.push(tarefa);
   salvar();
-  mostrarTarefa(texto);
+  mostrarTarefa(tarefa);
   campo.value = "";
 }
 
 tarefas.forEach(mostrarTarefa);
 botao.addEventListener("click", adicionarTarefa);
+
+campo.addEventListener("keydown", (evento) => {
+  if (evento.key === "Enter") adicionarTarefa();
+});
